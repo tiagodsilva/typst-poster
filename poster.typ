@@ -14,7 +14,7 @@
   departments: "Department Name",
 
   // University logo.
-  univ_logo: "Logo Path",
+  univ_logo: (),
 
   // Footer text.
   // For instance, Name of Conference, Date, Location.
@@ -47,7 +47,7 @@
   univ_logo_scale: "100",
 
   // University logo's column size (in in).
-  univ_logo_column_size: "10",
+  univ_logo_column_size: (),
 
   // Title and authors' column size (in in).
   title_column_size: "20",
@@ -62,13 +62,13 @@
   footer_url_font_size: "30",
 
   // Footer's text font size (in pt).
-  footer_text_font_size: "40",
+  footer_text_font_size: "30",
 
   // The poster's content.
   body
 ) = {
   // Set the body font.
-  set text(font: "STIX Two Text", size: 16pt)
+  set text(font: "Comfortaa", size: 16pt)
   let sizes = size.split("x")
   let width = int(sizes.at(0)) * 1in
   let height = int(sizes.at(1)) * 1in
@@ -76,7 +76,6 @@
   title_font_size = int(title_font_size) * 1pt
   authors_font_size = int(authors_font_size) * 1pt
   num_columns = int(num_columns)
-  univ_logo_column_size = int(univ_logo_column_size) * 1in
   title_column_size = int(title_column_size) * 1in
   footer_url_font_size = int(footer_url_font_size) * 1pt
   footer_text_font_size = int(footer_text_font_size) * 1pt
@@ -97,11 +96,11 @@
         inset: 20pt,
         radius: 10pt,
         [
-          #text(font: "Courier", size: footer_url_font_size, footer_url) 
+          #text(font: "Comfortaa", size: footer_url_font_size, footer_url) 
           #h(1fr) 
           #text(size: footer_text_font_size, smallcaps(footer_text)) 
           #h(1fr) 
-          #text(font: "Courier", size: footer_url_font_size, footer_email_ids)
+          #text(font: "Comfortaa", size: footer_url_font_size, footer_email_ids)
         ]
       )
     ]
@@ -161,16 +160,20 @@
   })
 
   // Arranging the logo, title, authors, and department in the header.
-  align(center,
+  align(left,
     grid(
       rows: 2,
-      columns: (univ_logo_column_size, title_column_size),
+      columns: 
+      (
+        title_column_size, 
+      ) + univ_logo_column_size,  
       column-gutter: 0pt,
       row-gutter: 50pt,
-      image(univ_logo, width: univ_logo_scale),
       text(title_font_size, title + "\n\n") + 
-      text(authors_font_size, emph(authors) + 
-          "   (" + departments + ") "),
+      text(authors_font_size, emph(authors)),
+      ..univ_logo.map(logo_path => 
+        image(logo_path, width: univ_logo_scale)
+      ),
     )
   )
 
@@ -181,7 +184,7 @@
 
   // Display the keywords.
   if keywords != () [
-      #set text(24pt, weight: 400)
+      #set text(32pt, weight: 400)
       #show "Keywords": smallcaps
       *Keywords* --- #keywords.join(", ")
   ]
