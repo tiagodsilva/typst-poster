@@ -167,7 +167,7 @@
       (
         title_column_size, 
       ) + univ_logo_column_size,  
-      column-gutter: 0pt,
+      column-gutter: (-.1in, -.1in, -.5in, -.1in, -.1in),
       row-gutter: 50pt,
       text(title_font_size, title + "\n\n") + 
       text(authors_font_size, emph(authors)),
