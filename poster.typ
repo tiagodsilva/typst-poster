@@ -49,6 +49,12 @@
   // University logo's column size (in in).
   univ_logo_column_size: (),
 
+  // University logo's column gutter (in in)  
+  univ_logo_column_gutter: (), 
+
+  univ_logo_grid_row_size: (),  
+  univ_logo_grid_col_size: (),  
+  
   // Title and authors' column size (in in).
   title_column_size: "20",
 
@@ -72,7 +78,9 @@
   let sizes = size.split("x")
   let width = int(sizes.at(0)) * 1in
   let height = int(sizes.at(1)) * 1in
-  univ_logo_scale = int(univ_logo_scale) * 1%
+  if type(univ_logo_scale) != "array" [  
+    #let univ_logo_scale = int(univ_logo_scale) * 1%
+  ] 
   title_font_size = int(title_font_size) * 1pt
   authors_font_size = int(authors_font_size) * 1pt
   num_columns = int(num_columns)
@@ -116,9 +124,9 @@
 
   // Configure headings.
   set heading(numbering: "I.A.1.")
-  show heading: it => locate(loc => {
+  show heading: it => {
     // Find out the final number of the heading counter.
-    let levels = counter(heading).at(loc)
+    let levels = counter(heading).at(here())
     let deepest = if levels != () {
       levels.last()
     } else {
@@ -157,31 +165,60 @@
       }
       _#(it.body):_
     ]
-  })
+  }
 
   // Arranging the logo, title, authors, and department in the header.
-  align(left,
-    grid(
-      rows: 2,
-      columns: 
-      (
-        title_column_size, 
-      ) + univ_logo_column_size,  
-      column-gutter: (-.1in, -.1in, -.5in, -.1in, -.1in),
-      row-gutter: 50pt,
-      text(title_font_size, title + "\n\n") + 
-      text(authors_font_size, emph(authors)),
-      ..univ_logo.map(logo_path => 
-        image(logo_path, width: univ_logo_scale)
-      ),
+
+  if univ_logo_grid_col_size.len() > 0 [
+    #align(left,
+      grid(
+        rows: 2,
+        columns: 
+        (
+          title_column_size, 
+        ) + univ_logo_column_size, 
+        column-gutter: univ_logo_column_gutter,
+        row-gutter: 50pt,
+        text(title_font_size, title + "\n\n") + 
+        text(authors_font_size, emph(authors)), 
+        grid( 
+          rows: univ_logo_grid_row_size, 
+          columns: univ_logo_grid_col_size, 
+          ..univ_logo.enumerate().map(
+              logo_path => 
+              align(
+                center, 
+                image(
+                  logo_path.at(1), 
+                  width: univ_logo_scale.at(logo_path.at(0))
+                )
+              )) 
+        ) 
+      )
     )
-  )
+  ] else [
+    #align(left,
+      grid(
+        rows: 2,
+        columns: 
+        (
+          title_column_size, 
+        ) + univ_logo_column_size,  
+        column-gutter: univ_logo_column_gutter,
+        row-gutter: 50pt,
+        text(title_font_size, title + "\n\n") + 
+        text(authors_font_size, emph(authors)),
+        ..univ_logo.map(logo_path => 
+          image(logo_path, width: univ_logo_scale)
+        ),
+      )
+    )
+  ]
 
   // Start three column mode and configure paragraph properties.
   show: columns.with(num_columns, gutter: 64pt)
-  set par(justify: true, first-line-indent: 0em)
-  show par: set block(spacing: 0.65em)
-
+  set par(justify: true, first-line-indent: 0em, spacing: 0.65em)
+  
   // Display the keywords.
   if keywords != () [
       #set text(32pt, weight: 400)
