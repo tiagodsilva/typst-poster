@@ -209,7 +209,7 @@
         text(title_font_size, title + "\n\n") + 
         text(authors_font_size, emph(authors)),
         ..univ_logo.map(logo_path => 
-          image(logo_path, width: univ_logo_scale)
+          image(logo_path, width: int(univ_logo_scale) * 1%)
         ),
       )
     )
