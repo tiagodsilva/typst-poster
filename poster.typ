@@ -15,7 +15,8 @@
 
   // University logo.
   univ_logo: (),
-
+  
+  poster_margin: (top: 1in, left: 2in, right: 2in, bottom: 2in), 
   // Footer text.
   // For instance, Name of Conference, Date, Location.
   // or Course Name, Date, Instructor.
@@ -70,6 +71,7 @@
   // Footer's text font size (in pt).
   footer_text_font_size: "30",
 
+  text_font_size: "24", 
   // The poster's content.
   body
 ) = {
@@ -93,8 +95,7 @@
   set page(
     width: width,
     height: height,
-    margin: 
-      (top: 1in, left: 2in, right: 2in, bottom: 2in),
+    margin: poster_margin, 
     footer: [
       #set align(center)
       #set text(32pt)
